@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Artikel tugas sistem digital tentang pengaplikasian seven segment, encoder, decoder, skema rangkaian, dan video pembuatan.">
+  <title>Catatan Sistem Digital: Pengaplikasian Seven Segment</title>
+  <style>
+    :root {
+      --paper: #fffdfb;
+      --page: #f3eee9;
+      --ink: #3d3840;
+      --muted: #81767c;
+      --line: #e5dadd;
+      --rose: #9b6079;
+      --rose-dark: #70435a;
+      --rose-light: #f8eef2;
+      --lavender: #eeeaf4;
+      --link: #80516b;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font: 16px/1.75 Georgia, "Times New Roman", serif;
+    }
+    a { color: var(--link); }
+    a:hover { color: var(--rose-dark); }
+    img { max-width: 100%; height: auto; }
+
+    .page {
+      width: min(1060px, calc(100% - 30px));
+      margin: 26px auto;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      box-shadow: 0 4px 18px rgba(91, 62, 72, .06);
+    }
+
+    .masthead {
+      padding: 36px 44px 29px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+    }
+    .masthead h1 {
+      margin: 0;
+      color: var(--rose-dark);
+      font-size: clamp(30px, 4vw, 43px);
+      font-weight: 400;
+      letter-spacing: .01em;
+    }
+    .masthead h1 a { color: inherit; text-decoration: none; }
+    .masthead p {
+      margin: 9px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+      font-style: italic;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: center;
+      gap: 27px;
+      padding: 11px 22px;
+      border-bottom: 1px solid var(--line);
+      background: #fffafb;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 13px;
+    }
+    .nav a { color: #695c63; text-decoration: none; }
+    .nav a:hover { color: var(--rose); }
+
+    .columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 235px;
+      gap: 38px;
+      padding: 38px 44px 48px;
+    }
+    .article { min-width: 0; }
+
+    .article-title {
+      margin: 0 0 5px;
+      color: #342d33;
+      font-size: clamp(30px, 4vw, 42px);
+      font-weight: 400;
+      line-height: 1.2;
+    }
+    .meta {
+      margin: 0 0 28px;
+      color: var(--muted);
+      font: 12px/1.6 Arial, Helvetica, sans-serif;
+    }
+    .meta span + span::before { content: "  |  "; color: #c6b5bb; }
+    .opening {
+      margin-bottom: 25px;
+      color: #534950;
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    h2 {
+      margin: 37px 0 13px;
+      padding-bottom: 7px;
+      color: var(--rose-dark);
+      border-bottom: 1px solid var(--line);
+      font-size: 26px;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+    h3 {
+      margin: 25px 0 7px;
+      color: #4c3d45;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.35;
+    }
+    p { margin: 0 0 16px; }
+    ul, ol { margin: 0 0 18px; padding-left: 24px; }
+    li { margin: 5px 0; }
+    code {
+      padding: 1px 4px;
+      border: 1px solid #eadfe3;
+      border-radius: 2px;
+      background: #fbf4f7;
+      color: #693f56;
+      font: .9em Consolas, "Courier New", monospace;
+    }
+
+    .note {
+      margin: 19px 0 23px;
+      padding: 14px 17px;
+      border-top: 1px solid #e4ccd6;
+      border-bottom: 1px solid #e4ccd6;
+      background: var(--rose-light);
+      color: #584952;
+    }
+    .note p:last-child { margin-bottom: 0; }
+
+    .comparison {
+      width: 100%;
+      margin: 18px 0 24px;
+      border-collapse: collapse;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 14px;
+    }
+    .comparison th, .comparison td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      vertical-align: top;
+      text-align: left;
+    }
+    .comparison th {
+      color: #fff;
+      background: var(--rose);
+      font-weight: 600;
+    }
+    .comparison tr:nth-child(even) td { background: #fffafa; }
+
+    .figure {
+      margin: 25px 0;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+    .figure img {
+      display: block;
+      width: 100%;
+      max-height: 590px;
+      object-fit: contain;
+      background: #fff;
+    }
+    .figure figcaption {
+      padding: 10px 13px;
+      border-top: 1px solid var(--line);
+      color: #766a71;
+      font: 13px/1.6 Arial, Helvetica, sans-serif;
+    }
+    .figure figcaption strong { color: #54424c; }
+    .figure-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+
+    .video-box {
+      margin: 20px 0 17px;
+      padding: 11px;
+      border: 1px solid var(--line);
+      background: var(--lavender);
+    }
+    .video-frame {
+      position: relative;
+      height: 0;
+      padding-bottom: 56.25%;
+      background: #17141a;
+    }
+    .video-frame iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    .video-caption {
+      margin: 10px 2px 0;
+      color: #756970;
+      font: 13px/1.5 Arial, Helvetica, sans-serif;
+    }
+
+    .truth-wrap { overflow-x: auto; }
+    .truth {
+      min-width: 710px;
+      width: 100%;
+      border-collapse: collapse;
+      font: 13px Arial, Helvetica, sans-serif;
+    }
+    .truth th, .truth td {
+      padding: 8px 7px;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+    .truth th { color: #fff; background: var(--rose); }
+    .truth td:last-child, .truth th:last-child { text-align: left; }
+    .truth tr:nth-child(even) td { background: #fffafa; }
+
+    .refs {
+      padding-left: 23px;
+      font: 14px/1.65 Arial, Helvetica, sans-serif;
+    }
+    .refs li { margin-bottom: 10px; }
+    .refs a { word-break: break-word; }
+
+    .sidebar { min-width: 0; font-family: Arial, Helvetica, sans-serif; }
+    .side-block {
+      margin-bottom: 28px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .side-title {
+      margin: 0 0 11px;
+      padding-bottom: 7px;
+      border-bottom: 2px solid var(--rose);
+      color: var(--rose-dark);
+      font: 700 17px/1.3 Georgia, "Times New Roman", serif;
+    }
+    .sidebar p, .sidebar li {
+      color: #756a70;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    .sidebar ul { padding-left: 18px; }
+    .sidebar li { margin: 6px 0; }
+    .sidebar a { text-decoration: none; }
+    .sidebar a:hover { text-decoration: underline; }
+    .component-list { margin: 0; padding: 0; list-style: none; }
+    .component-list li {
+      padding: 6px 0;
+      border-bottom: 1px dotted #d8cbd0;
+    }
+    .component-list li:last-child { border-bottom: 0; }
+    .source-file {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      background: #fcf7f9;
+      color: #756a70;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .footer {
+      padding: 17px 44px;
+      border-top: 1px solid var(--line);
+      background: #fffafb;
+      color: var(--muted);
+      font: 12px Arial, Helvetica, sans-serif;
+    }
+    .footer p { margin: 0; }
+
+    @media (max-width: 760px) {
+      .page { width: 100%; margin: 0; border-right: 0; border-left: 0; }
+      .masthead { padding: 28px 20px 23px; }
+      .nav { justify-content: flex-start; gap: 20px; overflow-x: auto; white-space: nowrap; }
+      .columns { grid-template-columns: 1fr; gap: 11px; padding: 28px 20px 38px; }
+      .sidebar { order: 2; }
+      .figure-row { grid-template-columns: 1fr; gap: 0; }
+      .footer { padding-left: 20px; padding-right: 20px; }
+      .meta span { display: block; }
+      .meta span + span::before { content: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="masthead" id="top">
+      <h1><a href="#top">Catatan Sistem Digital</a></h1>
+      <p>Belajar rangkaian digital melalui contoh yang sederhana</p>
+    </header>
+
+    <nav class="nav" aria-label="Menu artikel">
+      <a href="#top">Beranda</a>
+      <a href="#dasar">Dasar</a>
+      <a href="#rangkaian">Rangkaian</a>
+      <a href="#video">Video</a>
+      <a href="#referensi">Daftar sumber</a>
+    </nav>
+
+    <div class="columns">
+      <main class="article">
+        <article>
+          <h1 class="article-title">Pengaplikasian Seven Segment Display</h1>
+          <p class="meta"><span>Tugas Sistem Digital</span><span>21 Oktober 2026</span><span>Encoder dan Decoder</span></p>
+
+          <p class="opening">Seven segment display merupakan salah satu penampil yang sering dijumpai pada perangkat elektronik. Bentuknya sederhana, tetapi cara kerjanya berkaitan langsung dengan encoder, decoder, kode BCD, dan logika digital. Artikel ini membahas hubungan bagian-bagian tersebut serta contoh pemakaiannya dalam sebuah rangkaian.</p>
+
+          <h2 id="dasar">Pengertian Seven Segment</h2>
+          <p>Sebuah seven segment terdiri atas tujuh LED yang disusun menyerupai angka delapan. Setiap LED mempunyai nama <code>a</code> sampai <code>g</code>. Angka dibentuk dengan menyalakan kombinasi tertentu. Misalnya, angka 1 menyalakan segmen <code>b</code> dan <code>c</code>, sedangkan angka 8 menyalakan seluruh segmen.</p>
+
+          <p>Selain tujuh segmen utama, beberapa display menyediakan LED tambahan untuk titik desimal atau <code>DP</code>. Dalam praktiknya, display perlu diberi resistor pembatas arus agar LED dan IC penggerak tetap aman.</p>
+
+          <div class="note">
+            <p><strong>Perbedaan jenis display:</strong> pada common anode, anoda semua LED disatukan ke VCC sehingga segmen aktif ketika diberi LOW. Pada common cathode, katoda semua LED disatukan ke GND sehingga segmen aktif ketika diberi HIGH. IC 74LS47 digunakan untuk menggerakkan display common anode dengan keluaran active-low.[1]</p>
+          </div>
+
+          <table class="comparison">
+            <thead>
+              <tr><th>Jenis</th><th>Pin bersama</th><th>Segmen menyala ketika</th><th>Contoh driver</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Common anode</td><td>Anoda ke VCC</td><td>Input segmen LOW</td><td>7447 / 74LS47</td></tr>
+              <tr><td>Common cathode</td><td>Katoda ke GND</td><td>Input segmen HIGH</td><td>7448 / driver active-high</td></tr>
+            </tbody>
+          </table>
+
+          <h2>Bagaimana Encoder dan Decoder Bekerja?</h2>
+          <p>Encoder dan decoder mempunyai arah kerja yang berbeda. Encoder mengurangi banyak jalur input menjadi beberapa bit kode. Decoder menerima bit kode tersebut lalu mengaktifkan keluaran yang sesuai. Pada sistem keypad seven segment, prosesnya dapat dijelaskan seperti ini:</p>
+          <ol>
+            <li>Tombol angka pada keypad memberikan salah satu dari sepuluh input desimal.</li>
+            <li>IC 74147 berfungsi sebagai encoder dan menghasilkan kode BCD 4-bit.</li>
+            <li>Latch 7475 dapat menyimpan kode agar nilai tidak berubah ketika tombol dilepas.</li>
+            <li>IC 7447 menerjemahkan empat bit BCD menjadi sinyal untuk segmen <code>a</code> sampai <code>g</code>.</li>
+            <li>Display menyalakan segmen yang diperlukan untuk membentuk angka.</li>
+          </ol>
+
+          <figure class="figure">
+            <img src="images/skema_keypad_encoder_decoder_7447.png" alt="Skema keypad encoder decoder seven segment" loading="eager">
+            <figcaption><strong>Gambar 1. Skema keypad, encoder, latch, decoder, dan display.</strong> Diagram ini merupakan gambar asli dari file PPT <em>ENCODER DAN DECODER</em> yang dilampirkan.</figcaption>
+          </figure>
+
+          <h2 id="rangkaian">Contoh Pengaplikasian pada Rangkaian</h2>
+          <h3>Counter dua digit</h3>
+          <p>Seven segment dapat digunakan sebagai output counter. Pada contoh berikut, dua IC 74192 menghitung satuan dan puluhan. IC 74157 bertugas memilih salah satu data BCD sebelum data dikirim ke decoder 7447. Timer 555 mengatur pergantian digit secara cepat. Cara ini disebut multiplexing.</p>
+
+          <figure class="figure">
+            <img src="images/skema_counter_multiplexing_7447.png" alt="Skema counter dua digit dengan multiplexing" loading="eager">
+            <figcaption><strong>Gambar 2. Counter dua digit dengan teknik multiplexing.</strong> Komponen utama yang tampak pada skema adalah timer 555, counter 74192, MUX 74157, decoder 7447, dan display seven segment. Sumber: PPT terlampir.</figcaption>
+          </figure>
+
+          <h3>Rangkaian logika untuk segmen a</h3>
+          <p>Fungsi decoder juga dapat dirancang menggunakan gerbang logika. Contoh berikut memperlihatkan rangkaian untuk satu keluaran, yaitu segmen <code>a</code>. Inverter 7404 membentuk sinyal komplemen, kemudian gerbang AND dan OR menggabungkan kondisi input yang diperlukan.</p>
+
+          <figure class="figure">
+            <img src="images/skema_logika_segmen_a.png" alt="Rangkaian logika untuk segmen a" loading="eager">
+            <figcaption><strong>Gambar 3. Rangkaian logika kombinasi untuk menggerakkan segmen a.</strong> Gambar asli dari materi presentasi.</figcaption>
+          </figure>
+
+          <div class="figure-row">
+            <figure class="figure">
+              <img src="images/skema_decoder_3to8.png" alt="Decoder biner 3 ke 8" loading="eager">
+              <figcaption><strong>Gambar 4.</strong> Contoh rangkaian decoder 3-to-8.</figcaption>
+            </figure>
+            <figure class="figure">
+              <img src="images/tabel_kebenaran_decoder_3to8.png" alt="Tabel kebenaran decoder biner 3 ke 8" loading="eager">
+              <figcaption><strong>Gambar 5.</strong> Tabel kebenaran decoder 3-to-8.</figcaption>
+            </figure>
+          </div>
+
+          <h2 id="video">Video Pembuatan</h2>
+          <p>Untuk melihat contoh perakitan secara langsung, video berikut menunjukkan penggunaan IC decoder 74LS47 dengan display seven segment. Hal yang perlu diperhatikan adalah posisi pin, resistor seri, hubungan catu daya, serta kombinasi input BCD.</p>
+
+          <div class="video-box">
+            <div class="video-frame">
+              <iframe src="https://www.youtube.com/embed/IGU9p3o7pCU" title="Merakit Seven Segment Display Dengan IC Decoder 74LS47" loading="eager" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </div>
+            <p class="video-caption">Sumber video: <a href="https://www.youtube.com/watch?v=IGU9p3o7pCU" target="_blank" rel="noopener">Merakit Seven Segment Display Dengan IC Decoder 74LS47</a>.</p>
+          </div>
+
+          <h3>Urutan perakitan dasar</h3>
+          <ol>
+            <li>Siapkan IC 74LS47, display common anode, breadboard, kabel jumper, sumber 5 V, dan tujuh resistor.</li>
+            <li>Pasang catu daya IC: pin 16 ke VCC dan pin 8 ke GND.</li>
+            <li>Set pin <code>LT</code>, <code>BI/RBO</code>, dan <code>RBI</code> pada kondisi HIGH agar display bekerja normal.</li>
+            <li>Hubungkan output <code>a</code> sampai <code>g</code> melalui resistor ke kaki segmen yang sesuai. Gunakan datasheet untuk memastikan pin IC yang digunakan.[1]</li>
+            <li>Hubungkan common anode display ke VCC.</li>
+            <li>Uji input BCD dari 0000 sampai 1001. Hasilnya harus menampilkan angka 0 sampai 9.</li>
+          </ol>
+
+          <h2>Tabel Kebenaran BCD ke Seven Segment</h2>
+          <p>Untuk konfigurasi common anode dan IC 74LS47, angka 0 pada keluaran berarti segmen menyala, sedangkan angka 1 berarti segmen mati.[1]</p>
+          <div class="truth-wrap">
+            <table class="truth">
+              <thead>
+                <tr><th>Angka</th><th>BCD<br>D C B A</th><th>a</th><th>b</th><th>c</th><th>d</th><th>e</th><th>f</th><th>g</th><th>Segmen menyala</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>0</td><td>0000</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>a b c d e f</td></tr>
+                <tr><td>1</td><td>0001</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>b c</td></tr>
+                <tr><td>2</td><td>0010</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>a b d e g</td></tr>
+                <tr><td>3</td><td>0011</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>a b c d g</td></tr>
+                <tr><td>4</td><td>0100</td><td>1</td><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td><td>b c f g</td></tr>
+                <tr><td>5</td><td>0101</td><td>0</td><td>1</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>a c d f g</td></tr>
+                <tr><td>6</td><td>0110</td><td>0</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>a c d e f g</td></tr>
+                <tr><td>7</td><td>0111</td><td>0</td><td>0</td><td>0</td><td>1</td><td>1</td><td>1</td><td>1</td><td>a b c</td></tr>
+                <tr><td>8</td><td>1000</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>a b c d e f g</td></tr>
+                <tr><td>9</td><td>1001</td><td>0</td><td>0</td><td>0</td><td>0</td><td>1</td><td>0</td><td>0</td><td>a b c d f g</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Contoh Penggunaan</h2>
+          <ul>
+            <li>Jam digital, timer, dan stopwatch.</li>
+            <li>Display nomor antrean di bank, klinik, dan rumah sakit.</li>
+            <li>Multimeter digital, timbangan, serta alat ukur lainnya.</li>
+            <li>Counter jumlah barang dan papan skor pertandingan.</li>
+            <li>Panel angka pada peralatan rumah tangga dan perangkat industri.</li>
+          </ul>
+
+          <h2 id="referensi">Daftar Referensi</h2>
+          <ol class="refs">
+            <li>Texas Instruments. <em>SN74LS47 BCD-to-Seven-Segment Decoders/Drivers</em>. <a href="https://www.ti.com/product/SN74LS47" target="_blank" rel="noopener">https://www.ti.com/product/SN74LS47</a></li>
+            <li>YouTube. <em>Merakit Seven Segment Display Dengan IC Decoder 74LS47</em>. <a href="https://www.youtube.com/watch?v=IGU9p3o7pCU" target="_blank" rel="noopener">https://www.youtube.com/watch?v=IGU9p3o7pCU</a></li>
+            <li>Kingbright. <em>Through-Hole 7-Segment Display Catalog</em>. <a href="https://www.kingbrightusa.com/webimages/catalog/Through-Hole%20Display.pdf" target="_blank" rel="noopener">Katalog display</a></li>
+            <li>King Fahd University of Petroleum &amp; Minerals. <em>Seven-Segment Display Decoder, Experiment 006</em>. <a href="https://faculty.kfupm.edu.sa/COE/mimam/files/COE200/Experiment_006.pdf" target="_blank" rel="noopener">Dokumen praktikum</a></li>
+            <li>Tim Dosen STT-PLN. <em>ENCODER DAN DECODER</em>. Materi PPT terlampir.</li>
+          </ol>
+        </article>
+      </main>
+
+      <aside class="sidebar">
+        <section class="side-block">
+          <h2 class="side-title">Tentang Artikel</h2>
+          <p>Artikel ini dibuat untuk tugas sistem digital dengan fokus pada hubungan encoder, decoder, dan penampil angka.</p>
+        </section>
+
+        <section class="side-block">
+          <h2 class="side-title">Isi Artikel</h2>
+          <ul>
+            <li><a href="#dasar">Pengertian seven segment</a></li>
+            <li><a href="#rangkaian">Contoh skema</a></li>
+            <li><a href="#video">Video pembuatan</a></li>
+            <li><a href="#referensi">Daftar referensi</a></li>
+          </ul>
+        </section>
+
+        <section class="side-block">
+          <h2 class="side-title">Komponen yang Dibahas</h2>
+          <ul class="component-list">
+            <li>Seven segment CA / CC</li>
+            <li>IC 74147 encoder</li>
+            <li>IC 7447 decoder</li>
+            <li>IC 7475 latch</li>
+            <li>IC 74192 counter</li>
+            <li>IC 74157 multiplexer</li>
+            <li>Timer 555</li>
+          </ul>
+        </section>
+
+        <section class="side-block">
+          <h2 class="side-title">Catatan Sumber</h2>
+          <div class="source-file">Diagram rangkaian berasal dari gambar asli dalam file PPT <em>4.ENCODER DAN DECODER1.ppt</em> yang dilampirkan.</div>
+        </section>
+      </aside>
+    </div>
+
+    <footer class="footer">
+      <p>Catatan Sistem Digital · Pengaplikasian Seven Segment · 2026</p>
+    </footer>
+  </div>
+</body>
+</html>
